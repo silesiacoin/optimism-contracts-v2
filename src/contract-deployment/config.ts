@@ -43,7 +43,19 @@ export const makeContractDeployConfig = async (
   return {
     OVM_L1CrossDomainMessenger: {
       factory: getContractFactory('OVM_L1CrossDomainMessenger'),
-      params: [AddressManager.address],
+      params: [],
+    },
+    Proxy__OVM_L1CrossDomainMessenger: {
+      factory: getContractFactory('Lib_ResolvedDelegateProxy'),
+      params: [AddressManager.address, 'OVM_L1CrossDomainMessenger'],
+      afterDeploy: async (contracts): Promise<void> => {
+        const xDomainMessenger = getContractFactory(
+          'OVM_L1CrossDomainMessenger'
+        )
+          .connect(config.deploymentSigner)
+          .attach(contracts.Proxy__OVM_L1CrossDomainMessenger.address)
+        await xDomainMessenger.initialize(AddressManager.address)
+      },
     },
     OVM_L2CrossDomainMessenger: {
       factory: getContractFactory('OVM_L2CrossDomainMessenger'),
@@ -118,6 +130,12 @@ export const makeContractDeployConfig = async (
     },
     OVM_ECDSAContractAccount: {
       factory: getContractFactory('OVM_ECDSAContractAccount'),
+    },
+    OVM_SequencerEntrypoint: {
+      factory: getContractFactory('OVM_SequencerEntrypoint'),
+    },
+    OVM_ProxySequencerEntrypoint: {
+      factory: getContractFactory('OVM_ProxySequencerEntrypoint'),
     },
     mockOVM_ECDSAContractAccount: {
       factory: getContractFactory('mockOVM_ECDSAContractAccount'),
