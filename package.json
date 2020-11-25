@@ -27,7 +27,7 @@
     "deploy": "./bin/deploy.js"
   },
   "dependencies": {
-    "@ethersproject/experimental": "^5.0.7",
+    "@ethersproject/experimental": "5.0.0",
     "@ethersproject/hardware-wallets": "^5.0.8",
     "ethers": "5.0.0"
   },

@@ -3,6 +3,7 @@
 const contracts = require('../build/src/contract-deployment/deploy');
 const { providers, Wallet, utils } = require('ethers');
 const { LedgerSigner } = require('@ethersproject/hardware-wallets');
+const { NonceManager } = require('@ethersproject/experimental');
 const { JsonRpcProvider } = providers;
 
 const env = process.env;
@@ -14,7 +15,7 @@ const sequencerKey = "0x9a6ce39890ff85f46b9a420fe34daa08cb24937b57c8c878e40ed87c
 let SEQUENCER_ADDRESS = env.SEQUENCER_ADDRESS;
 const web3Url = env.L1_NODE_WEB3_URL || 'http://34.78.227.45:8545';
 const MIN_TRANSACTION_GAS_LIMIT = env.MIN_TRANSACTION_GAS_LIMIT || 0;
-const MAX_TRANSACTION_GAS_LIMIT = env.MAX_TRANSACTION_GAS_LIMIT || 1000000000000000;
+const MAX_TRANSACTION_GAS_LIMIT = env.MAX_TRANSACTION_GAS_LIMIT || 10000000000000000;
 const MAX_GAS_PER_QUEUE_PER_EPOCH = env.MAX_GAS_PER_QUEUE_PER_EPOCH || 250000000;
 const SECONDS_PER_EPOCH = env.SECONDS_PER_EPOCH || 600;
 let WHITELIST_OWNER = env.WHITELIST_OWNER;
@@ -35,6 +36,8 @@ const HD_PATH = env.HD_PATH || utils.defaultPath;
       throw new Error('Must pass deployer key as DEPLOYER_PRIVATE_KEY');
     signer = new Wallet(key, provider);
   }
+
+  signer = new NonceManager(signer);
 
   if (SEQUENCER_ADDRESS) {
     if (!utils.isAddress(SEQUENCER_ADDRESS))

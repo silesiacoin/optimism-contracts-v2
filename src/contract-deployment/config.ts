@@ -3,9 +3,10 @@ import { Signer, ContractFactory, Contract } from 'ethers'
 
 /* Internal Imports */
 import { getContractFactory } from '../contract-defs'
+import { NonceManager } from '@ethersproject/experimental'
 
 export interface RollupDeployConfig {
-  deploymentSigner: Signer
+  deploymentSigner: NonceManager
   ovmGasMeteringConfig: {
     minTransactionGasLimit: number
     maxTransactionGasLimit: number
@@ -55,7 +56,7 @@ export const makeContractDeployConfig = async (
           'OVM_L1CrossDomainMessenger'
         )
           .connect(config.deploymentSigner)
-          .attach(contracts.OVM_L1CrossDomainMessenger.address)
+          .attach(contracts.Proxy__OVM_L1CrossDomainMessenger.address)
         await xDomainMessenger.initialize(AddressManager.address)
       },
     },

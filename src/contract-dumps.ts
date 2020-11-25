@@ -8,6 +8,7 @@ import { keccak256 } from 'ethers/lib/utils'
 import { deploy, RollupDeployConfig } from './contract-deployment'
 import { fromHexString, toHexString, remove0x } from './utils'
 import { getContractDefinition } from './contract-defs'
+import { NonceManager } from '@ethersproject/experimental'
 
 interface StorageDump {
   [key: string]: string
@@ -107,9 +108,10 @@ export const makeStateDump = async (): Promise<any> => {
 
   const provider = new ethers.providers.Web3Provider(ganache)
   const signer = provider.getSigner(0)
+  const nonceManager: NonceManager = new NonceManager(signer)
 
   const config: RollupDeployConfig = {
-    deploymentSigner: signer,
+    deploymentSigner: nonceManager,
     ovmGasMeteringConfig: {
       minTransactionGasLimit: 0,
       maxTransactionGasLimit: 1_000_000_000,
@@ -120,11 +122,11 @@ export const makeStateDump = async (): Promise<any> => {
       ovmCHAINID: 420,
     },
     transactionChainConfig: {
-      sequencer: signer,
+      sequencer: nonceManager,
       forceInclusionPeriodSeconds: 600,
     },
     whitelistConfig: {
-      owner: signer,
+      owner: nonceManager,
       allowArbitraryContractDeployment: true,
     },
     dependencies: [
