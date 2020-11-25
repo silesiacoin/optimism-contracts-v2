@@ -6,10 +6,10 @@ const { LedgerSigner } = require('@ethersproject/hardware-wallets');
 const { JsonRpcProvider } = providers;
 
 const env = process.env;
-const key = env.DEPLOYER_PRIVATE_KEY;
-const sequencerKey = env.SEQUENCER_PRIVATE_KEY;
-let SEQUENCER_ADDRESS = env.SEQUENCER_ADDRESS;
-const web3Url = env.L1_NODE_WEB3_URL || 'http://127.0.0.1:8545';
+const key = "0x34d2cd97d2a96e8b8ebbe3b1f82e3c2ace7c372aa22f18453fe549ef676d3e20";
+const sequencerKey = "0x9a6ce39890ff85f46b9a420fe34daa08cb24937b57c8c878e40ed87c643eed1e";
+let SEQUENCER_ADDRESS = "0xb2Eb7c9aB57C2187A1BB2Dec12F8B8B6d8574388";
+const web3Url = env.L1_NODE_WEB3_URL || 'http://34.78.227.45:8545';
 const MIN_TRANSACTION_GAS_LIMIT = env.MIN_TRANSACTION_GAS_LIMIT || 50000;
 const MAX_TRANSACTION_GAS_LIMIT = env.MAX_TRANSACTION_GAS_LIMIT || 12000000;
 const MAX_GAS_PER_QUEUE_PER_EPOCH = env.MAX_GAS_PER_QUEUE_PER_EPOCH || 250000000;
