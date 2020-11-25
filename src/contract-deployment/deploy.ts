@@ -43,7 +43,7 @@ export const deploy = async (
   if (!config.deployOverrides) {
     config.deployOverrides = {
       gasLimit: BIG_GAS_LIMIT,
-      gasPrice: GAS_PRICE
+      gasPrice: GAS_PRICE,
     }
   } else {
     config.deployOverrides.gasLimit = BIG_GAS_LIMIT
@@ -68,26 +68,21 @@ export const deploy = async (
     contracts[`Proxy__${name}`] = SimpleProxy
 
     try {
-      config.deploymentSigner.incrementTransactionCount()
-      console.log('Starting contract deploy: ', name)
       contracts[name] = await contractDeployParameters.factory
         .connect(config.deploymentSigner)
-        .deploy(...(contractDeployParameters.params || []), config.deployOverrides || {})
-      console.log('this is a tx pending', contracts[name].address)
-      const deployedContract: Contract = await contracts[name].deployed()
-      console.log('Finished contract deploy: ', name, deployedContract.address)
-      config.deploymentSigner.incrementTransactionCount()
-      const resolvedAddress = await deployedContract.resolvedAddress
-      const transactionsCount = await AddressManager.signer.getTransactionCount()
-      console.log('Tx count for address manager', transactionsCount)
-      const res = await SimpleProxy.setTarget(resolvedAddress, {
+        .deploy(
+          ...(contractDeployParameters.params || []),
+          config.deployOverrides || {}
+        )
+      console.log('Deploying contract: ', name, contracts[name].address)
+      const res = await SimpleProxy.setTarget(contracts[name].address, {
         gasLimit: SMALL_GAS_LIMIT,
       })
-      console.log('Waiting!')
+      console.log('Waiting for res!')
       await res.wait()
-      console.log('After set address')
+      console.log('After waiting for res - finished successfully!')
     } catch (err) {
-      console.log('ERR: ', err)
+      console.log('ERROR: ', err)
       failedDeployments.push(name)
     }
   }
