@@ -4,10 +4,11 @@ import { Overrides } from '@ethersproject/contracts'
 
 /* Internal Imports */
 import { getContractFactory } from '../contract-defs'
+import { NonceManager } from '@ethersproject/experimental'
 import { BIG_GAS_LIMIT, SMALL_GAS_LIMIT, GAS_PRICE } from '.'
 
 export interface RollupDeployConfig {
-  deploymentSigner: Signer
+  deploymentSigner: NonceManager
   ovmGasMeteringConfig: {
     minTransactionGasLimit: number
     maxTransactionGasLimit: number
@@ -90,12 +91,12 @@ export const makeContractDeployConfig = async (
           typeof sequencer === 'string'
             ? sequencer
             : await sequencer.getAddress()
-        await AddressManager.setAddress('OVM_Sequencer', sequencerAddress, 
+        await AddressManager.setAddress('OVM_Sequencer', sequencerAddress,
           {
             gasLimit: SMALL_GAS_LIMIT
           }
         )
-        await AddressManager.setAddress('Sequencer', sequencerAddress, 
+        await AddressManager.setAddress('Sequencer', sequencerAddress,
           {
             gasLimit: SMALL_GAS_LIMIT
           }

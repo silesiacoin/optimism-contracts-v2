@@ -3,6 +3,7 @@
 const contracts = require('../build/src/contract-deployment/deploy');
 const { providers, Wallet, utils } = require('ethers');
 const { LedgerSigner } = require('@ethersproject/hardware-wallets');
+const { NonceManager } = require('@ethersproject/experimental');
 const { JsonRpcProvider } = providers;
 
 const env = process.env;
@@ -38,6 +39,8 @@ const L2_CROSS_DOMAIN_MESSENGER_ADDRESS =
       throw new Error('Must pass deployer key as DEPLOYER_PRIVATE_KEY');
     signer = new Wallet(key, provider);
   }
+
+  signer = new NonceManager(signer);
 
   if (SEQUENCER_ADDRESS) {
     if (!utils.isAddress(SEQUENCER_ADDRESS))
