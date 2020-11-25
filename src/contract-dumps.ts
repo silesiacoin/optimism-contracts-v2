@@ -120,10 +120,16 @@ export const makeStateDump = async (): Promise<any> => {
     },
     ovmGlobalContext: {
       ovmCHAINID: 420,
+      L2CrossDomainMessengerAddress:
+        '0x4200000000000000000000000000000000000007',
     },
     transactionChainConfig: {
       sequencer: nonceManager,
       forceInclusionPeriodSeconds: 600,
+    },
+    stateChainConfig: {
+      fraudProofWindowSeconds: 600,
+      sequencerPublishWindowSeconds: 60_000,
     },
     whitelistConfig: {
       owner: nonceManager,
@@ -153,6 +159,9 @@ export const makeStateDump = async (): Promise<any> => {
     OVM_ECDSAContractAccount: '0x4200000000000000000000000000000000000003',
     OVM_ProxySequencerEntrypoint: '0x4200000000000000000000000000000000000004',
     OVM_SequencerEntrypoint: '0x4200000000000000000000000000000000000005',
+    //L2 ETH at 0x4200000000000000000000000000000000000006
+    OVM_L2CrossDomainMessenger: '0x4200000000000000000000000000000000000007',
+    Lib_AddressManager: '0x4200000000000000000000000000000000000008',
   }
 
   const deploymentResult = await deploy(config)

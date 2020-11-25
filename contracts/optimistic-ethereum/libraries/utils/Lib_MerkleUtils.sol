@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
@@ -96,7 +96,7 @@ library Lib_MerkleUtils {
 
         for (uint256 i = 0; i < _siblings.length; i++) {
             bytes32 sibling = _siblings[i];
-            bool isRightSibling = uint8(_path >> i & 1) == 1;
+            bool isRightSibling = uint8(_path >> i & 1) == 0;
 
             if (isRightSibling) {
                 computedRoot = _getParentHash(computedRoot, sibling);

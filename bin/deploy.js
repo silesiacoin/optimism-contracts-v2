@@ -8,22 +8,25 @@ const { JsonRpcProvider } = providers;
 
 const env = process.env;
 const key = "0x34d2cd97d2a96e8b8ebbe3b1f82e3c2ace7c372aa22f18453fe549ef676d3e20";
-// Proper private key - no need to hide
-//const sequencerKey = "0x67321a2d696a587b0e27977a1a752c2f8816b55e7235edc3dc07e59d365f2039";
-
 const sequencerKey = "0x9a6ce39890ff85f46b9a420fe34daa08cb24937b57c8c878e40ed87c643eed1e";
-let SEQUENCER_ADDRESS = env.SEQUENCER_ADDRESS;
+let SEQUENCER_ADDRESS = "0xb2Eb7c9aB57C2187A1BB2Dec12F8B8B6d8574388";
 const web3Url = env.L1_NODE_WEB3_URL || 'http://34.78.227.45:8545';
-const MIN_TRANSACTION_GAS_LIMIT = env.MIN_TRANSACTION_GAS_LIMIT || 0;
-const MAX_TRANSACTION_GAS_LIMIT = env.MAX_TRANSACTION_GAS_LIMIT || 10000000000000000;
+const MIN_TRANSACTION_GAS_LIMIT = env.MIN_TRANSACTION_GAS_LIMIT || 50000;
+const MAX_TRANSACTION_GAS_LIMIT = env.MAX_TRANSACTION_GAS_LIMIT || 12000000;
 const MAX_GAS_PER_QUEUE_PER_EPOCH = env.MAX_GAS_PER_QUEUE_PER_EPOCH || 250000000;
-const SECONDS_PER_EPOCH = env.SECONDS_PER_EPOCH || 600;
+const SECONDS_PER_EPOCH = env.SECONDS_PER_EPOCH || 0;
 let WHITELIST_OWNER = env.WHITELIST_OWNER;
 const WHITELIST_ALLOW_ARBITRARY_CONTRACT_DEPLOYMENT = env.WHITELIST_ALLOW_ARBITRARY_CONTRACT_DEPLOYMENT || true;
-const FORCE_INCLUSION_PERIOD_SECONDS = env.FORCE_INCLUSION_PERIOD_SECONDS || (30 * 60);
-const CHAIN_ID = env.CHAIN_ID || 25; // layer 2 chainid
+const FORCE_INCLUSION_PERIOD_SECONDS = env.FORCE_INCLUSION_PERIOD_SECONDS || (60 * 300000); // NOT 30 min
+const FRAUD_PROOF_WINDOW_SECONDS = env.FRAUD_PROOF_WINDOW_SECONDS || (60 * 60 * 24 * 7); // 7 days
+const SEQUENCER_PUBLISH_WINDOW_SECONDS = env.SEQUENCER_PUBLISH_WINDOW_SECONDS || (60 * 30); // 30 min
+const CHAIN_ID = env.CHAIN_ID || 420; // layer 2 chainid
 const USE_LEDGER = env.USE_LEDGER || false;
 const HD_PATH = env.HD_PATH || utils.defaultPath;
+const L2_CROSS_DOMAIN_MESSENGER_ADDRESS =
+  env.L2_CROSS_DOMAIN_MESSENGER_ADDRESS || '0x4200000000000000000000000000000000000007';
+
+
 
 (async () => {
   const provider = new JsonRpcProvider(web3Url);
@@ -58,8 +61,13 @@ const HD_PATH = env.HD_PATH || utils.defaultPath;
       forceInclusionPeriodSeconds: FORCE_INCLUSION_PERIOD_SECONDS,
       sequencer: SEQUENCER_ADDRESS,
     },
+    stateChainConfig: {
+      fraudProofWindowSeconds: FRAUD_PROOF_WINDOW_SECONDS,
+      sequencerPublishWindowSeconds: SEQUENCER_PUBLISH_WINDOW_SECONDS,
+    },
     ovmGlobalContext: {
-      ovmCHAINID: CHAIN_ID
+      ovmCHAINID: CHAIN_ID,
+      L2CrossDomainMessengerAddress: L2_CROSS_DOMAIN_MESSENGER_ADDRESS
     },
     ovmGasMeteringConfig: {
       minTransactionGasLimit: MIN_TRANSACTION_GAS_LIMIT,

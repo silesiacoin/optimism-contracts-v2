@@ -3,6 +3,7 @@ import { Signer, Contract, ContractFactory } from 'ethers'
 
 /* Internal Imports */
 import { RollupDeployConfig, makeContractDeployConfig } from './config'
+import { BIG_GAS_LIMIT, SMALL_GAS_LIMIT, GAS_PRICE } from '.'
 import { getContractFactory } from '../contract-defs'
 import { NonceManager } from '@ethersproject/experimental'
 
@@ -34,6 +35,16 @@ export const deploy = async (
     AddressManager
   )
 
+  if (!config.deployOverrides) {
+    config.deployOverrides = {
+      gasLimit: BIG_GAS_LIMIT,
+      gasPrice: GAS_PRICE,
+    }
+  } else {
+    config.deployOverrides.gasLimit = BIG_GAS_LIMIT
+    config.deployOverrides.gasPrice = GAS_PRICE
+  }
+
   const failedDeployments: string[] = []
   const contracts: {
     [name: string]: Contract
@@ -51,7 +62,10 @@ export const deploy = async (
       console.log('Starting contract deploy: ', name)
       contracts[name] = await contractDeployParameters.factory
         .connect(config.deploymentSigner)
-        .deploy(...(contractDeployParameters.params || []))
+        .deploy(
+          ...(contractDeployParameters.params || []),
+          config.deployOverrides || {}
+        )
       console.log('this is a tx pending', contracts[name].address)
       const deployedContract: Contract = await contracts[name].deployed()
       console.log('Finished contract deploy: ', name, deployedContract.address)
@@ -59,7 +73,11 @@ export const deploy = async (
       const resolvedAddress = await deployedContract.resolvedAddress
       const transactionsCount = await AddressManager.signer.getTransactionCount()
       console.log('Tx count for address manager', transactionsCount)
-      await AddressManager.setAddress(name, resolvedAddress)
+      const res = await AddressManager.setAddress(name, resolvedAddress, {
+        gasLimit: SMALL_GAS_LIMIT,
+      })
+      console.log('Waiting!')
+      await res.wait()
       console.log('After set address')
     } catch (err) {
       console.log('ERR: ', err)
