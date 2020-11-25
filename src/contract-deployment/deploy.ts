@@ -52,6 +52,7 @@ export const deploy = async (
       contracts[name] = await contractDeployParameters.factory
         .connect(config.deploymentSigner)
         .deploy(...(contractDeployParameters.params || []))
+      console.log('this is a tx pending', contracts[name].address)
       const deployedContract: Contract = await contracts[name].deployed()
       console.log('Finished contract deploy: ', name, deployedContract.address)
       config.deploymentSigner.incrementTransactionCount()
