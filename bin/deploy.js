@@ -6,13 +6,15 @@ const { LedgerSigner } = require('@ethersproject/hardware-wallets');
 const { JsonRpcProvider } = providers;
 
 const env = process.env;
-const key = "0x...";
+const key = "0x34d2cd97d2a96e8b8ebbe3b1f82e3c2ace7c372aa22f18453fe549ef676d3e20";
 // Proper private key - no need to hide
+//const sequencerKey = "0x67321a2d696a587b0e27977a1a752c2f8816b55e7235edc3dc07e59d365f2039";
+
 const sequencerKey = "0x9a6ce39890ff85f46b9a420fe34daa08cb24937b57c8c878e40ed87c643eed1e";
 let SEQUENCER_ADDRESS = env.SEQUENCER_ADDRESS;
-const web3Url = env.L1_NODE_WEB3_URL || 'https://rpc.l14.lukso.network/';
+const web3Url = env.L1_NODE_WEB3_URL || 'http://34.78.227.45:8545';
 const MIN_TRANSACTION_GAS_LIMIT = env.MIN_TRANSACTION_GAS_LIMIT || 0;
-const MAX_TRANSACTION_GAS_LIMIT = env.MAX_TRANSACTION_GAS_LIMIT || 1000000000;
+const MAX_TRANSACTION_GAS_LIMIT = env.MAX_TRANSACTION_GAS_LIMIT || 1000000000000000;
 const MAX_GAS_PER_QUEUE_PER_EPOCH = env.MAX_GAS_PER_QUEUE_PER_EPOCH || 250000000;
 const SECONDS_PER_EPOCH = env.SECONDS_PER_EPOCH || 600;
 let WHITELIST_OWNER = env.WHITELIST_OWNER;

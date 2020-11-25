@@ -228,6 +228,15 @@
     "@ethersproject/logger" "^5.0.5"
     "@ethersproject/properties" "^5.0.3"
 
+"@ethersproject/experimental@^5.0.7":
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@ethersproject/experimental/-/experimental-5.0.7.tgz#689d9f00ce5724fc8a40cbc70912548a380881fe"
+  integrity sha512-ovCYzoHuthR/tb5m1MqUZMTSLver1sy6y8NSrYKTFUb8tj8luMnCEZceSyC8jtgDvoB7pEXnouDOy+VCAWrIlw==
+  dependencies:
+    "@ethersproject/web" "^5.0.6"
+    ethers "^5.0.13"
+    scrypt-js "3.0.1"
+
 "@ethersproject/hardware-wallets@^5.0.8":
   version "5.0.8"
   resolved "https://registry.yarnpkg.com/@ethersproject/hardware-wallets/-/hardware-wallets-5.0.8.tgz#cea6a6b76b7eb165fc248cc4908df82bc4725fc6"

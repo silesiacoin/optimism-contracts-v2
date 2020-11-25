@@ -49,11 +49,13 @@ export const makeContractDeployConfig = async (
       factory: getContractFactory('Lib_ResolvedDelegateProxy'),
       params: [AddressManager.address, 'OVM_L1CrossDomainMessenger'],
       afterDeploy: async (contracts): Promise<void> => {
+        console.log('KONTRAKTY: ', contracts)
+        console.log('SUSPECT: ', contracts.OVM_L1CrossDomainMessenger)
         const xDomainMessenger = getContractFactory(
           'OVM_L1CrossDomainMessenger'
         )
           .connect(config.deploymentSigner)
-          .attach(contracts.Proxy__OVM_L1CrossDomainMessenger.address)
+          .attach(contracts.OVM_L1CrossDomainMessenger.address)
         await xDomainMessenger.initialize(AddressManager.address)
       },
     },
